@@ -1,0 +1,18 @@
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+# IntelliJ IDEA pro
+.idea/libraries
+.idea/copyright
+.idea/workspace.xml
+.idea/uiDesigner.xml
+.idea/gradle_extensions.xml
+.idea/gradle.xml
+.idea/compiler.xml
+.idea/vcs.xml
+.idea/misc.xml
+.vscode
+
+# Gradle
+.gradle
+build/

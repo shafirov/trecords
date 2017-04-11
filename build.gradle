@@ -1,0 +1,39 @@
+group 'com.jetbrains.circlet'
+
+buildscript {
+    apply from: 'versions.gradle'
+
+    repositories {
+        maven { url "https://dl.bintray.com/kotlin/kotlin-dev" }
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+allprojects {
+    repositories {
+        maven { url "https://dl.bintray.com/kotlin/kotlin-dev" }
+        mavenCentral()
+        jcenter()
+    }
+
+    apply plugin: 'idea'
+    apply plugin: 'java'
+    apply plugin: 'kotlin'
+
+    dependencies {
+        compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+        compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+        compile "io.reactivex:rxkotlin:$rxkotlin_version"
+
+        compile "com.github.krukow:clj-ds:0.0.4"
+        compile 'io.reactivex:rxkotlin:0.55.0'
+
+        testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+        testCompile group: 'junit', name: 'junit', version: junit_version
+    }
+}
