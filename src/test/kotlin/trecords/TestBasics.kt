@@ -27,5 +27,21 @@ class TestBasics {
         }
 
         assertEquals("Alice, Bob", jetbrains.members.map { it.name }.sorted().joinToString())
+
+        var modelChangeFired = false
+        model.changeEvents.forEach {
+            @Suppress("UNCHECKED_CAST")
+            val update = it as? TRecordUpdateEvent<String> ?: error("Expected record update event")
+
+            assertEquals("Bob", update.oldValue)
+            assertEquals("John", update.newValue)
+            modelChangeFired = true
+        }
+
+        model.transaction {
+            jetbrains.members.first { it.name == "Bob" }.name = "John"
+        }
+
+        assertEquals(true, modelChangeFired, "Model change didn't fired!")
     }
 }
