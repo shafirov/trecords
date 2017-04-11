@@ -1,18 +1,29 @@
 package trecords.impl
 
-import com.github.krukow.clj_ds.*
-import rx.*
-import rx.lang.kotlin.*
-import trecords.*
-import trecords.util.*
-import java.lang.reflect.*
-import java.util.concurrent.atomic.*
-import kotlin.reflect.*
-import kotlin.reflect.full.*
-import kotlin.reflect.jvm.*
+import com.github.krukow.clj_ds.PersistentSet
+import rx.Observable
+import rx.lang.kotlin.PublishSubject
+import trecords.Model
+import trecords.ModelUpdate
+import trecords.ReferenceIndex
+import trecords.RefferableRecord
+import trecords.TNewRecordEvent
+import trecords.TRecord
+import trecords.TRecordUpdateEvent
+import trecords.TRemoveRecordEvent
+import trecords.TUnknownRecord
+import trecords.util.Random
+import trecords.util.UID
+import java.lang.reflect.InvocationHandler
+import java.lang.reflect.Method
+import java.lang.reflect.Proxy
+import java.util.concurrent.atomic.AtomicReference
+import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
+import kotlin.reflect.KProperty1
+import kotlin.reflect.full.declaredMemberProperties
 
 fun Class<*>.isRecordType(): Boolean = TRecord::class.java.isAssignableFrom(this)
-fun KType.isRecord(): Boolean = (javaType as? Class<*>)?.isRecordType() ?: false
 private data class FieldDesc(val id: UID, val field: String)
 private fun fieldId(id: UID, field: String): FieldDesc = FieldDesc(id, field)
 
@@ -153,7 +164,7 @@ internal class TModelImpl(vararg records: KClass<out TRecord>) : Model {
     val types = records.map { it.simpleName to it }.toMap()
     private val transaction = ThreadLocal<TransactionData>()
 
-    final override val modelUpdates = PublishSubject<ModelUpdate>()
+    override val modelUpdates = PublishSubject<ModelUpdate>()
 
     override val changeEvents = modelUpdates.flatMap { Observable.from(it.changedRecords).flatMap { Observable.from(it.second) } }
 
